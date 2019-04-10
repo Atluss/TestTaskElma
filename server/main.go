@@ -1,43 +1,49 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/Atluss/TestTaskElma/lib/config"
+	webserve "github.com/Atluss/TestTaskElma/server/web.serve"
 	"github.com/gorilla/sessions"
 	"net/http"
 )
 
 var (
 	// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
-	key   = []byte("super-secret-key")
-	store = sessions.NewCookieStore(key)
-
+	key         = []byte("super-secret-key")
+	store       = sessions.NewCookieStore(key)
 	sessionName = "session_a"
 )
 
 func main() {
 
-	route := mux.NewRouter().StrictSlash(true)
+	path := "settings.json"
+	set := config.NewApiSetup(path)
 
-	route.HandleFunc("/", rootHttp)
-	route.HandleFunc("/login", login)
-	route.HandleFunc("/logout", logout)
+	// files for web pages images, css, fonts, js and etc.
+	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http.files/public"))))
 
-	http.ListenAndServe(":8080", route)
+	webserve.AddPage("http.files/list.html", "/", true, set)
 
-}
+	//test login logout
+	set.Route.HandleFunc("/login", login)
+	set.Route.HandleFunc("/logout", logout)
 
-func rootHttp(w http.ResponseWriter, r *http.Request) {
+	/*set.Gorm.AutoMigrate(&data.Keys{})
+	set.Gorm.Create(&data.Keys{
+		Key: "12312---454655644-3",
+		Status: 0,
+		Info: data.Info{
+			Name: "a",
+			Ip: "192.168.0.1",
+		},
+	})
 
-	session, _ := store.Get(r, sessionName)
-	w.Header().Set("Content-Type", "text/html")
+	product := data.Keys{}
+	set.Gorm.First(&product, "key = ?", "12312----3")
+	log.Printf("%+v", product.Info.Ip)*/
 
-	// Check if user is authenticated
-	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-		w.WriteHeader(http.StatusForbidden)
-		http.ServeFile(w, r, "public/login.html")
-	} else {
-		http.ServeFile(w, r, "public/list.html")
-	}
+	http.ListenAndServe(":8080", set.Route)
+
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
