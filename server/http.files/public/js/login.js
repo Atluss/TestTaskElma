@@ -41,13 +41,17 @@ $(document).ready(function () {
                 dataType: "json",
                 cache: false,
                 success: function(json){
-                    if(json.ok) {
+                    if(json.Status === 200) {
                         window.location.href = "/";
                     } else {
                         formShowError('loginError', errorDiv);
                     }
 
                     that.removeClass('processing-button');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    that.removeClass('processing-button');
+                    formShowError('serverNo', errorDiv);
                 }
             });
         } else {

@@ -1,33 +1,47 @@
 package main
 
 import (
+	"fmt"
+	"github.com/Atluss/TestTaskElma/lib"
 	"github.com/Atluss/TestTaskElma/lib/config"
+	cpu "github.com/Atluss/TestTaskElma/lib/cpu.status"
+	"github.com/Atluss/TestTaskElma/server/rest.api/v1"
 	webserve "github.com/Atluss/TestTaskElma/server/web.serve"
-	"github.com/gorilla/sessions"
+	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
 )
 
-var (
-	// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
-	key         = []byte("super-secret-key")
-	store       = sessions.NewCookieStore(key)
-	sessionName = "session_a"
-)
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+var Clients = make(map[*websocket.Conn]bool) // connected clients
+var Broadcast = make(chan cpu.CPULoad)       // broadcast channel
 
 func main() {
 
 	path := "settings.json"
 	set := config.NewApiSetup(path)
+	set.Config.Print()
 
 	// files for web pages images, css, fonts, js and etc.
 	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http.files/public"))))
 
+	// web pages
 	webserve.AddPage("http.files/list.html", "/", true, set)
 	webserve.AddPage("http.files/client.html", "/client", false, set)
 
-	//test login logout
-	set.Route.HandleFunc("/login", login)
-	set.Route.HandleFunc("/logout", logout)
+	// setup rest endpoints
+	lib.FailOnError(v1.V1Login(set, false), "error")
+	lib.FailOnError(v1.V1Logout(set), "error")
+	lib.FailOnError(v1.V1AddKey(set), "error")
+
+	go cpu.GetCpuLoad(Broadcast)
+	go HandleMessages()
+
+	set.Route.HandleFunc("/st_cpu", HandleConnections)
 
 	/*set.Gorm.AutoMigrate(&data.Keys{})
 	set.Gorm.Create(&data.Keys{
@@ -43,25 +57,46 @@ func main() {
 	set.Gorm.First(&product, "key = ?", "12312----3")
 	log.Printf("%+v", product.Info.Ip)*/
 
-	http.ListenAndServe(":8080", set.Route)
+	lib.FailOnError(http.ListenAndServe(fmt.Sprintf(":%s", set.Config.Port), set.Route), "error")
 
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, sessionName)
+func HandleConnections(w http.ResponseWriter, r *http.Request) {
+	// Upgrade initial GET request to a websocket
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Make sure we close the connection when the function returns
+	defer ws.Close()
 
-	// Authentication goes here
-	// ...
+	// Register our new client
+	Clients[ws] = true
 
-	// Set user as authenticated
-	session.Values["authenticated"] = true
-	session.Save(r, w)
+	for {
+		var msg cpu.CPULoad
+		// Read in a new message as JSON and map it to a Message object
+		err := ws.ReadJSON(&msg)
+		if err != nil {
+			log.Printf("error: %v", err)
+			delete(Clients, ws)
+			break
+		}
+	}
 }
 
-func logout(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, sessionName)
-
-	// Revoke users authentication
-	session.Values["authenticated"] = false
-	session.Save(r, w)
+func HandleMessages() {
+	for {
+		// Grab the next message from the broadcast channel
+		msg := <-Broadcast
+		// Send it out to every client that is currently connected
+		for client := range Clients {
+			err := client.WriteJSON(msg)
+			if err != nil {
+				log.Printf("error: %v", err)
+				client.Close()
+				delete(Clients, client)
+			}
+		}
+	}
 }

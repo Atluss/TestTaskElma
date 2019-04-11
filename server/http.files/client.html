@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Клиент</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
@@ -10,17 +14,20 @@
         <div class="send_key_div">
             <div class="input_holder">
               <label for="srvAddress">Адрес сервера для запроса:</label>
-              <input type="text" name="srvAddress" id="srvAddress"/>
+              <input type="text" name="srvAddress" id="srvAddress" value="http://localhost:8080/v1/addkey"/>
             </div>
             <div class="client_key_holder">Ваш ключ: <span id="key"></span></div>
             <div class="sbm_button mt_6">Отправить ключ</div>
             <div class="err_holder_login"></div>
             <div class="key_send_success">
-                Ваш ключ был отправлен на сервер: <span id="server_sended"></span><br/>
-                <div class="new_wb_conn">Установить соединения</div>
-                <div class="wb_conn_info"></div>
-                <div class="wb_server_connect">Загрузка ЦП сервера:
-                    <span id="server_CPU"></span>%</div>
+                Ваш ключ был успешно отправлен на сервер:<br/>
+                <span id="server_sended" class="fn_bold"></span><br/>
+                Адрес для подключение по websocket:<br/>
+                <span id="server_ws" class="fn_bold"></span><br/>
+
+                <div class="new_wb_conn mt_6">Установить соединения</div>
+                <div class="wb_server_connect mt_10">Загрузка ЦП сервера: <span id="server_CPU">--.--</span>%</div>
+                <pre class="wb_conn_info"></pre>
             </div>
         </div>
     </div>

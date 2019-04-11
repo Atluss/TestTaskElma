@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Atluss/TestTaskElma/lib"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -40,6 +41,7 @@ type gormConfig struct {
 type config struct {
 	Name     string     `json:"Name"`    // API name
 	Version  string     `json:"Version"` // API version
+	Address  string     `json:"Address"`
 	Port     string     `json:"Port"`
 	FilePath string     `json:"FilePath"` // path to Json settings file
 	Gorm     gormConfig `json:"Gorm"`
@@ -80,6 +82,10 @@ func (obj *config) validate() error {
 		return fmt.Errorf("config miss version")
 	}
 
+	if obj.Address == "" {
+		return fmt.Errorf("config miss address")
+	}
+
 	if obj.Port == "" {
 		return fmt.Errorf("config miss port")
 	}
@@ -113,4 +119,11 @@ func (obj *config) validate() error {
 	}
 
 	return nil
+}
+
+func (obj *config) Print() {
+	log.Printf("Name: %s", obj.Name)
+	log.Printf("Version: %s", obj.Version)
+	log.Printf("Address: %s", obj.Address)
+	log.Printf("Port: %s", obj.Port)
 }

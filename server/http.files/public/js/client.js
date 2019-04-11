@@ -3,6 +3,7 @@ $(document).ready(function () {
     var cookieKeyName = "client_key";
     var cookieSendKeyName = "key_sended";
     var cookieServerSended = "server_sended";
+    var cookieWebSocetSrv = "ws_server";
     var uuid = getCookie(cookieKeyName);
 
     if (uuid === undefined) {
@@ -13,10 +14,10 @@ $(document).ready(function () {
     console.log(uuid);
     $('#key').html(uuid);
 
-    var isSended = getCookie(cookieKeyName);
+    var isSended = getCookie(cookieSendKeyName);
 
     if (isSended === "Y") {
-        hideSendKeyAndShowWS(getCookie(cookieServerSended))
+        hideSendKeyAndShowWS()
     }
 
     $(document).on('click', '.new_wb_conn', function () {
@@ -25,8 +26,9 @@ $(document).ready(function () {
             return false;
         }
         $(this).addClass('processing-button');
+        wsServer = getCookie(cookieWebSocetSrv);
 
-        var socket = new WebSocket("ws://localhost:8080/echo");
+        var socket = new WebSocket(wsServer);
 
         var conInfo = $('.wb_conn_info');
         var cpuStat = $('#server_CPU');
@@ -77,21 +79,27 @@ $(document).ready(function () {
 
         if (formCanSend) {
             $.ajax({
-                url: serverAddress,
+                url: serverAddress.val(),
                 type: 'post',
                 data: {key: uuid},
                 dataType: "json",
+                crossDomain: true,
                 cache: false,
                 success: function(json){
-                    if(json.ok) {
+                    if(json.Status === 200) {
                         setCookie(cookieSendKeyName, "Y", {expires : 31536000});
-                        setCookie(cookieServerSended, serverAddress, {expires : 31536000});
-                        hideSendKeyAndShowWS(serverAddress)
+                        setCookie(cookieServerSended, serverAddress.val(), {expires : 31536000});
+                        setCookie(cookieWebSocetSrv, json.ServerWSAdr, {expires : 31536000});
+                        hideSendKeyAndShowWS(cookieServerSended)
                     } else {
                         formShowError('badRequest', errorDiv);
                     }
 
                     that.removeClass('processing-button');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    that.removeClass('processing-button');
+                    formShowError('serverNo', errorDiv);
                 }
             });
         } else {
@@ -99,9 +107,10 @@ $(document).ready(function () {
         }
     });
 
-    function hideSendKeyAndShowWS(serverAddr) {
+    function hideSendKeyAndShowWS() {
         $('.key_send_success').show();
-        $('#server_sended').html(getCookie(serverAddr));
+        $('#server_sended').html(getCookie(cookieServerSended));
+        $('#server_ws').html(getCookie(cookieWebSocetSrv));
         $('div.input_holder').hide();
         $('.sbm_button').hide();
     }

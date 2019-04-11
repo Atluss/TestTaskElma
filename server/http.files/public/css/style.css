@@ -22,6 +22,8 @@ html, body {
 .w_500{width: 500px}
 .mr_10{margin-right: 10px}
 .mt_6{margin-top: 6px}
+.mt_10{margin-top: 10px}
+.fn_bold{font-weight: bold}
 
 .button_sort_holder {margin: 5px 0 20px 0}
 .button_sr {
@@ -93,7 +95,7 @@ html, body {
 /*login*/
 .login_form {
     width: 200px;
-    height: 210px;
+    height: 220px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -171,4 +173,5 @@ html, body {
 .key_send_success {
     margin-top: 10px;
     margin-bottom: 10px;
+    display: none;
 }

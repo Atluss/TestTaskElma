@@ -1,10 +1,13 @@
 package web_serve
 
 import (
+	"github.com/Atluss/TestTaskElma/lib/api"
+	"github.com/Atluss/TestTaskElma/lib/auth"
 	"github.com/Atluss/TestTaskElma/lib/config"
 	"net/http"
 )
 
+// AddPage add static page to webserver
 func AddPage(page, url string, secure bool, set *config.Setup) {
 
 	login := &pageSt{
@@ -18,7 +21,7 @@ func AddPage(page, url string, secure bool, set *config.Setup) {
 }
 
 type pageSt struct {
-	RequestHttp
+	api.HeadRequest
 	Setup  *config.Setup
 	Url    string
 	Page   string
@@ -27,11 +30,10 @@ type pageSt struct {
 
 func (obj *pageSt) Request(w http.ResponseWriter, r *http.Request) {
 
-	setDefaultHeadersHttp(w)
+	api.SetDefaultHeadersHttp(w)
 
 	if obj.Secure {
-		session, _ := store.Get(r, sessionName)
-		if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		if !auth.CheckAuth(auth.GetSession(r)) {
 			http.ServeFile(w, r, "http.files/login.html")
 			return
 		}

@@ -1,6 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
+  "address" : "localhost",
   "port" : "8080",
   "gorm" : {
     "type" : "postgres",
