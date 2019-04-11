@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиент</title>
+    <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+    <div class="client_main w_500">
+        <div class="send_key_div">
+            <div class="input_holder">
+              <label for="srvAddress">Адрес сервера для запроса:</label>
+              <input type="text" name="srvAddress" id="srvAddress"/>
+            </div>
+            <div class="client_key_holder">Ваш ключ: <span id="key"></span></div>
+            <div class="sbm_button mt_6">Отправить ключ</div>
+            <div class="err_holder_login"></div>
+            <div class="key_send_success">
+                Ваш ключ был отправлен на сервер: <span id="server_sended"></span><br/>
+                <div class="new_wb_conn">Установить соединения</div>
+                <div class="wb_conn_info"></div>
+                <div class="wb_server_connect">Загрузка ЦП сервера:
+                    <span id="server_CPU"></span>%</div>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript" src="public/js/jquery-3.3.0.min.js"></script>
+    <script type="application/javascript" src="public/js/main.js"></script>
+    <script type="application/javascript" src="public/js/client.js"></script>
+</body>
+</html>

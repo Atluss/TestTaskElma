@@ -19,6 +19,7 @@ html, body {
 .w_150{width: 150px}
 .w_200{width: 200px}
 .w_300{width: 300px}
+.w_500{width: 500px}
 .mr_10{margin-right: 10px}
 .mt_6{margin-top: 6px}
 
@@ -88,3 +89,86 @@ html, body {
 
 .sb_accept {background: #009900}
 .sb_block {background: #990000}
+
+/*login*/
+.login_form {
+    width: 200px;
+    height: 210px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.form_title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333333;
+}
+
+.input_holder {
+    width: 100%;
+}
+
+.input_holder label{
+    font-size: 10px;
+    color: #666666;
+}
+
+.input_holder input {
+    width: 100%; height: 35px;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding-left: 5px;
+    color: #333;
+}
+
+.border_error {
+    border: 1px solid red !important;
+}
+
+.sbm_holder {
+    margin-top: 7px;
+}
+
+.sbm_button, .new_wb_conn {
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 2.3;
+    background: #0099FF;
+    color: #fff;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.err_holder_login {
+    margin-top: 5px;
+    color: red;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/*client*/
+
+.client_main {
+    margin: 20px auto 0;
+}
+
+.client_key_holder {
+    margin-top: 15px;
+}
+.client_key_holder span {
+    font-weight: bold;
+}
+
+.key_send_success {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

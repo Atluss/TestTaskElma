@@ -23,6 +23,7 @@ func main() {
 	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http.files/public"))))
 
 	webserve.AddPage("http.files/list.html", "/", true, set)
+	webserve.AddPage("http.files/client.html", "/client", false, set)
 
 	//test login logout
 	set.Route.HandleFunc("/login", login)
