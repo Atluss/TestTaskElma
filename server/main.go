@@ -26,7 +26,7 @@ func main() {
 	set := config.NewApiSetup(path)
 	set.Config.Print()
 
-	// files for web pages images, css, fonts, js and etc.
+	// files for web pages: images, css, fonts, js and etc.
 	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http.files/public"))))
 
 	// web pages
@@ -62,34 +62,37 @@ func main() {
 }
 
 func HandleConnections(w http.ResponseWriter, r *http.Request) {
-	// Upgrade initial GET request to a websocket
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Make sure we close the connection when the function returns
 	defer ws.Close()
 
-	// Register our new client
 	Clients[ws] = true
 
 	for {
-		var msg cpu.CPULoad
-		// Read in a new message as JSON and map it to a Message object
-		err := ws.ReadJSON(&msg)
+		//var msg cpu.CPULoad
+
+		st := struct {
+			Key string
+		}{}
+
+		err := ws.ReadJSON(&st)
 		if err != nil {
 			log.Printf("error: %v", err)
 			delete(Clients, ws)
 			break
 		}
+
+		log.Printf("%+v", st)
 	}
 }
 
 func HandleMessages() {
 	for {
-		// Grab the next message from the broadcast channel
+
 		msg := <-Broadcast
-		// Send it out to every client that is currently connected
+
 		for client := range Clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
