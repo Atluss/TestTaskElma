@@ -20,9 +20,11 @@ html, body {
 .w_200{width: 200px}
 .w_300{width: 300px}
 .w_500{width: 500px}
+.w_600{width: 600px}
 .mr_10{margin-right: 10px}
 .mt_6{margin-top: 6px}
 .mt_10{margin-top: 10px}
+.mb_10{margin-bottom: 10px}
 .fn_bold{font-weight: bold}
 
 .button_sort_holder {margin: 5px 0 20px 0}
@@ -138,13 +140,25 @@ html, body {
     margin-top: 7px;
 }
 
-.sbm_button, .new_wb_conn {
+.sbm_button {
     width: 100%;
     height: 35px;
     text-align: center;
     cursor: pointer;
     line-height: 2.3;
     background: #0099FF;
+    color: #fff;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.bt_close_ws {
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 2.3;
+    background: #FF3333;
     color: #fff;
     border-radius: 3px;
     font-weight: bold;
@@ -159,12 +173,8 @@ html, body {
 
 /*client*/
 
-.client_main {
+.send_key_div {
     margin: 20px auto 0;
-}
-
-.client_key_holder {
-    margin-top: 15px;
 }
 .client_key_holder span {
     font-weight: bold;
@@ -173,5 +183,29 @@ html, body {
 .key_send_success {
     margin-top: 10px;
     margin-bottom: 10px;
-    display: none;
+}
+
+.connected_server div{
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.wb_server_connect {
+    font-weight: bold;
+}
+
+.wb_server_connect span {
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    background: #006699;
+    color: #fff;
+}
+
+fieldset {
+    width: 90%;
+    margin: 0 auto;
+    font-size: 12px;
+    background: #FFFFCC;
+    border: 1px solid green;
 }

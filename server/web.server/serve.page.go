@@ -1,4 +1,4 @@
-package web_serve
+package web_server
 
 import (
 	"github.com/Atluss/TestTaskElma/lib/api"

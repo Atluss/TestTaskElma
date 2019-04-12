@@ -6,7 +6,8 @@ import (
 	"github.com/Atluss/TestTaskElma/lib/config"
 	cpu "github.com/Atluss/TestTaskElma/lib/cpu.status"
 	"github.com/Atluss/TestTaskElma/server/rest.api/v1"
-	webserve "github.com/Atluss/TestTaskElma/server/web.serve"
+	webserve "github.com/Atluss/TestTaskElma/server/web.server"
+	ws_server "github.com/Atluss/TestTaskElma/server/ws.server"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -15,10 +16,12 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
-var Clients = make(map[*websocket.Conn]bool) // connected clients
-var Broadcast = make(chan cpu.CPULoad)       // broadcast channel
+var Broadcast = make(chan cpu.CPULoad) // broadcast channel
 
 func main() {
 
@@ -41,51 +44,26 @@ func main() {
 	go cpu.GetCpuLoad(Broadcast)
 	go HandleMessages()
 
-	set.Route.HandleFunc("/st_cpu", HandleConnections)
+	lib.FailOnError(ws_server.WSClient(set), "error")
 
-	/*set.Gorm.AutoMigrate(&data.Keys{})
-	set.Gorm.Create(&data.Keys{
+	/*key := data.Keys{
+		Key: "1231231232123",
+	}
+
+	if err := key.Create(set.Gorm); err != nil {
+		log.Println(err)
+	}*/
+
+	/*set.Gorm.Create(&data.Keys{
 		Key: "12312---454655644-3",
 		Status: 0,
-		Info: data.Info{
-			Name: "a",
-			Ip: "192.168.0.1",
-		},
 	})
 
 	product := data.Keys{}
-	set.Gorm.First(&product, "key = ?", "12312----3")
-	log.Printf("%+v", product.Info.Ip)*/
+	set.Gorm.First(&product, "key = ?", "12312----3")*/
 
 	lib.FailOnError(http.ListenAndServe(fmt.Sprintf(":%s", set.Config.Port), set.Route), "error")
 
-}
-
-func HandleConnections(w http.ResponseWriter, r *http.Request) {
-	ws, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer ws.Close()
-
-	Clients[ws] = true
-
-	for {
-		//var msg cpu.CPULoad
-
-		st := struct {
-			Key string
-		}{}
-
-		err := ws.ReadJSON(&st)
-		if err != nil {
-			log.Printf("error: %v", err)
-			delete(Clients, ws)
-			break
-		}
-
-		log.Printf("%+v", st)
-	}
 }
 
 func HandleMessages() {
@@ -93,12 +71,12 @@ func HandleMessages() {
 
 		msg := <-Broadcast
 
-		for client := range Clients {
+		for client := range ws_server.Clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
 				log.Printf("error: %v", err)
 				client.Close()
-				delete(Clients, client)
+				delete(ws_server.Clients, client)
 			}
 		}
 	}

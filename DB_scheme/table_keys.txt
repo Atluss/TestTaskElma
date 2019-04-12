@@ -1,8 +1,13 @@
 -- auto-generated definition
 create table keys
 (
-	key varchar(512) not null,
-	info json
+	id serial
+		constraint keys_pk
+			primary key,
+	key varchar(256),
+	name varchar(256),
+	ip varchar(256),
+	status SMALLINT
 );
 
 create unique index keys_key_uindex

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Клиент</title>
@@ -10,26 +10,35 @@
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
-    <div class="client_main w_500">
-        <div class="send_key_div">
-            <div class="input_holder">
-              <label for="srvAddress">Адрес сервера для запроса:</label>
-              <input type="text" name="srvAddress" id="srvAddress" value="ws://localhost:8080/st_cpu"/>
-            </div>
-            <div class="client_key_holder">Ваш ключ: <span id="key"></span></div>
-            <div class="sbm_button mt_6">Установить соединения</div>
-            <div class="err_holder_login"></div>
+<div id="app">
+    <div class="send_key_div w_600">
+        <div class="client_key_holder">Ваш ключ: <span v-html="key"></span></div>
 
-            <div class="key_send_success">
-                Ваш ключ был успешно отправлен на сервер:<br/>
-                <span id="server_sended" class="fn_bold"></span><br/>
-                <div class="wb_server_connect mt_10">Загрузка ЦП сервера: <span id="server_CPU">--.--</span>%</div>
-                <pre class="wb_conn_info"></pre>
+        <template v-if="!connected">
+            <div class="input_holder">
+                <label for="srvAddress">Адрес сервера для запроса:</label>
+                <input type="text" v-bind:class="{ border_error: addressEr }" v-model="address"/>
             </div>
-        </div>
+            <div class="sbm_button mt_10 mb_10" @click="openWS">Установить соединения</div>
+            <div class="err_holder_login" v-html="addressErrStr"></div>
+        </template>
+        <template v-else>
+            <div class="key_send_success">
+                <div class="bt_close_ws mt_10 mb_10" @click="closeWS">Отсоедениться</div>
+                <div class="connected_server">
+                    Ваш ключ был успешно отправлен на сервер:<br/>
+                    <div v-html="address"></div>
+                </div>
+                <div class="wb_server_connect mt_10">Загрузка ЦП сервера: <span v-html="cpu"></span> %</div>
+            </div>
+        </template>
     </div>
-    <script type="application/javascript" src="public/js/jquery-3.3.0.min.js"></script>
-    <script type="application/javascript" src="public/js/main.js"></script>
-    <script type="application/javascript" src="public/js/client.js"></script>
+    <fieldset>
+        <legend>Лог подключений(сессионный):</legend>
+        <pre v-html="connectConsole"></pre>
+    </fieldset>
+</div>
+<script type="application/javascript" src="public/js/vue.js"></script>
+<script type="application/javascript" src="public/js/client.js"></script>
 </body>
 </html>

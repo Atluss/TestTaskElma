@@ -58,10 +58,6 @@ func (obj *v1AddKey) Request(w http.ResponseWriter, r *http.Request) {
 	dKey := data.Keys{
 		Key:    key,
 		Status: 0,
-		Info: data.Info{
-			Name: "a",
-			Ip:   r.RemoteAddr,
-		},
 	}
 
 	log.Printf("%+v", dKey)
