@@ -36,10 +36,6 @@ new Vue({
                 this.editButName = "Заблокировать";
             }
 
-            console.log(this.editKey.key);
-            console.log(this.editKey.name);
-            console.log(this.editKey.status);
-
             this.popUpOpen = true;
         },
         closePopUp: function() {
@@ -85,9 +81,9 @@ new Vue({
 
             this.ws.addEventListener('message', function(e) {
                 var msg = JSON.parse(e.data);
-                console.log(msg.Status);
-                console.log(msg.Items);
-                console.log(msg.UpdatedKey);
+                // console.log(msg.Status);
+                // console.log(msg.Items);
+                // console.log(msg.UpdatedKey);
 
                 if (msg.Type === "getList") {
                     self.items = msg.Items;

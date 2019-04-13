@@ -34,7 +34,7 @@
             <div v-if="items == null || items.length === 0">Записей нет</div>
             <div class="key_el" v-for="item in items">
                 <div class="key_val mb_10">Key: <span>{{item.Key}}</span> IP: <span>{{item.Ip}}</span></div>
-                <div class="key_val mb_10">User agent: <span>{{item.Name}}}</span></div>
+                <div class="key_val mb_10">User agent: <span>{{item.Name}}</span></div>
 
                 <div class="w_300">
                     <div class="sm_button sb_accept f_l mr_10" @click="openPopUp(item.Key, item.Name, statuses.active)" v-if="item.Status == 0 || item.Status == 2">Разрешить</div>
@@ -58,7 +58,7 @@
                 <input type="text" name="el_name" id="el_name" v-model.trim="editKey.name"/>
                 <div class="btn_set_status_key mt_10 mb_10"
                      v-html="editButName"
-                     :class="{block_btn: editKey.status == statuses.blocked}" @click="sendUpdateKey">Отправить</div>
+                     :class="{block_btn: editKey.status == statuses.blocked}" @click="sendUpdateKey">Разрешить</div>
             </div>
         </div>
     </div>

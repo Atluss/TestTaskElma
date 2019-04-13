@@ -39,7 +39,6 @@ func main() {
 	// setup rest endpoints
 	lib.FailOnError(v1.V1Login(set, false), "error")
 	lib.FailOnError(v1.V1Logout(set), "error")
-	lib.FailOnError(v1.V1AddKey(set), "error")
 
 	go cpu.GetCpuLoad(Broadcast)
 	go HandleMessages()
@@ -47,26 +46,10 @@ func main() {
 	lib.FailOnError(ws_server.WSClient(set), "error")
 	lib.FailOnError(ws_server.WSList(set, true), "error")
 
-	/*key := data.Keys{
-		Key: "1231231232123",
-	}
-
-	if err := key.Create(set.Gorm); err != nil {
-		log.Println(err)
-	}*/
-
-	/*set.Gorm.Create(&data.Keys{
-		Key: "12312---454655644-3",
-		Status: 0,
-	})
-
-	product := data.Keys{}
-	set.Gorm.First(&product, "key = ?", "12312----3")*/
-
 	lib.FailOnError(http.ListenAndServe(fmt.Sprintf(":%s", set.Config.Port), set.Route), "error")
-
 }
 
+// HandleMessages send CPU load all accepted connections
 func HandleMessages() {
 	for {
 
