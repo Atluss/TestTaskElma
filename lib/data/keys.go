@@ -2,39 +2,12 @@
 package data
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 	"github.com/jinzhu/gorm"
+	"log"
 )
 
 const TableKeys = "keys"
-
-type Info struct {
-	Name string `json:"Name"`
-	Ip   string `json:"Ip"`
-}
-
-func (obj *Info) Scan(value interface{}) error {
-	if value == nil {
-		return nil
-	}
-	if s, ok := value.([]byte); ok {
-		if err := json.Unmarshal(s, &obj); err != nil {
-			return err
-		}
-		return nil
-	}
-	return fmt.Errorf("error convert value to string")
-}
-
-func (obj Info) Value() (driver.Value, error) {
-	if data, err := json.Marshal(obj); err != nil {
-		return nil, err
-	} else {
-		return data, nil
-	}
-}
 
 type Keys struct {
 	Id     int `gorm:"primary_key"`
@@ -72,4 +45,15 @@ func (obj *Keys) LoadByKey(db *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+// GetKeysByStatus get keys by status
+func GetKeysByStatus(status int, db *gorm.DB) (keys []Keys, err error) {
+
+	if err := db.Table(TableKeys).Where("status = ?", status).Scan(&keys).Error; err != nil {
+		log.Printf("error: get keys by status %d, err: %s", status, err)
+		return keys, err
+	}
+
+	return keys, err
 }

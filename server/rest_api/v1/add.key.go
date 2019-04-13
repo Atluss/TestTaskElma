@@ -21,12 +21,6 @@ func V1AddKey(set *config.Setup) error {
 	return nil
 }
 
-type v1AddKey struct {
-	api.RequestRest
-	WbS string
-	Url string
-}
-
 type v1AKreplay struct {
 	Status      int
 	Description string
@@ -39,6 +33,12 @@ func (obj *v1AKreplay) Encode(w http.ResponseWriter) error {
 		return err
 	}
 	return nil
+}
+
+type v1AddKey struct {
+	api.RequestRest
+	WbS string
+	Url string
 }
 
 func (obj *v1AddKey) Request(w http.ResponseWriter, r *http.Request) {

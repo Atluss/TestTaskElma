@@ -5,9 +5,9 @@ import (
 	"github.com/Atluss/TestTaskElma/lib"
 	"github.com/Atluss/TestTaskElma/lib/config"
 	cpu "github.com/Atluss/TestTaskElma/lib/cpu.status"
-	"github.com/Atluss/TestTaskElma/server/rest.api/v1"
-	webserve "github.com/Atluss/TestTaskElma/server/web.server"
-	ws_server "github.com/Atluss/TestTaskElma/server/ws.server"
+	"github.com/Atluss/TestTaskElma/server/rest_api/v1"
+	webserve "github.com/Atluss/TestTaskElma/server/web_server"
+	ws_server "github.com/Atluss/TestTaskElma/server/ws_server"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -30,11 +30,11 @@ func main() {
 	set.Config.Print()
 
 	// files for web pages: images, css, fonts, js and etc.
-	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http.files/public"))))
+	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http_files/public"))))
 
 	// web pages
-	webserve.AddPage("http.files/list.html", "/", true, set)
-	webserve.AddPage("http.files/client.html", "/client", false, set)
+	webserve.AddPage("http_files/list.html", "/", true, set)
+	webserve.AddPage("http_files/client.html", "/client", false, set)
 
 	// setup rest endpoints
 	lib.FailOnError(v1.V1Login(set, false), "error")
@@ -45,6 +45,7 @@ func main() {
 	go HandleMessages()
 
 	lib.FailOnError(ws_server.WSClient(set), "error")
+	lib.FailOnError(ws_server.WSList(set, true), "error")
 
 	/*key := data.Keys{
 		Key: "1231231232123",

@@ -1,7 +1,6 @@
 package ws_server
 
 import (
-	"fmt"
 	"github.com/Atluss/TestTaskElma/lib/api"
 	"github.com/Atluss/TestTaskElma/lib/config"
 	"github.com/Atluss/TestTaskElma/lib/data"
@@ -14,11 +13,11 @@ import (
 func WSClient(set *config.Setup) error {
 
 	wsClient := &wSClient{
-		Url:   fmt.Sprintf("/%s/login", api.V1Api),
+		Url:   "/st_cpu",
 		Setup: set,
 	}
 
-	set.Route.HandleFunc("/st_cpu", wsClient.HandleConnection)
+	set.Route.HandleFunc(wsClient.Url, wsClient.HandleConnection)
 
 	return nil
 }
@@ -33,7 +32,8 @@ func (obj *wSClient) HandleConnection(w http.ResponseWriter, r *http.Request) {
 
 	ws, err := Upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 	defer ws.Close()
 

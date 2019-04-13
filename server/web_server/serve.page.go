@@ -34,7 +34,7 @@ func (obj *pageSt) Request(w http.ResponseWriter, r *http.Request) {
 
 	if obj.Secure {
 		if !auth.CheckAuth(auth.GetSession(r)) {
-			http.ServeFile(w, r, "http.files/login.html")
+			http.ServeFile(w, r, "http_files/login.html")
 			return
 		}
 	}
