@@ -32,12 +32,20 @@ type wSList struct {
 
 type wSReplyList struct {
 	Status int
-	Items  []data.Keys
+	Type   string // message type
+	// getList
+	// updateKey
+	Items      []data.Keys
+	UpdatedKey string
 }
 
 type wSRequestList struct {
-	GetList bool // need get keys list
-	Status  int
+	Type string // message type
+	// getList
+	// updateKey
+	Status int
+	Key    string
+	Name   string
 }
 
 func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
@@ -65,17 +73,38 @@ func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		log.Printf("%+v", req)
+
 		msg := wSReplyList{
-			Items: []data.Keys{},
+			Status: http.StatusOK,
+			Items:  []data.Keys{},
 		}
 
-		if req.GetList {
+		if req.Type == "getList" {
+			msg.Type = "getList"
 			msg.Items, err = data.GetKeysByStatus(req.Status, obj.Setup.Gorm)
 			if err != nil {
 				msg.Status = http.StatusInternalServerError
-			} else {
-				msg.Status = http.StatusOK
 			}
+		} else {
+
+			msg.Type = "updateKey"
+
+			key := data.Keys{
+				Key:    req.Key,
+				Name:   req.Name,
+				Status: req.Status,
+			}
+
+			if err := key.Update(obj.Setup.Gorm); err != nil {
+				msg.Status = http.StatusInternalServerError
+			} else {
+				msg.UpdatedKey = key.Key
+			}
+
+			log.Printf("%+v", key)
+			log.Printf("%+v", msg)
+
 		}
 
 		err := ws.WriteJSON(msg)

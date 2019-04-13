@@ -14,12 +14,12 @@ type Keys struct {
 	Key    string
 	Name   string
 	Ip     string
-	Status int8
+	Status int
 }
 
 func (obj *Keys) checkKeyIsSet() error {
 	if obj.Key == "" {
-		return fmt.Errorf("error: no key to greate row")
+		return fmt.Errorf("error: no key to create row")
 	}
 	return nil
 }
@@ -44,6 +44,18 @@ func (obj *Keys) LoadByKey(db *gorm.DB) error {
 		Where("key = ?", obj.Key).First(obj).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+func (obj *Keys) Update(db *gorm.DB) error {
+	if err := obj.checkKeyIsSet(); err != nil {
+		return err
+	}
+
+	if err := db.Table(TableKeys).Where("key = ?", obj.Key).Update(obj).Error; err != nil {
+		return fmt.Errorf("error to update key: %s", err)
+	}
+
 	return nil
 }
 

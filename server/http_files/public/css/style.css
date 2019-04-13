@@ -73,6 +73,7 @@ body.bodyLock {
     padding: 5px;
     margin-bottom: 5px;
     min-width: 590px;
+    position: relative;
 }
 
 .key_list{

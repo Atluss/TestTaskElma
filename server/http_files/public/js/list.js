@@ -45,6 +45,20 @@ new Vue({
         closePopUp: function() {
             this.popUpOpen = false;
         },
+        sendUpdateKey: function () {
+
+            if (!this.editKey.key || !this.editKey.name || !this.editKey.status) {
+                return
+            }
+
+            this.ws.send(JSON.stringify({
+                    Type: "updateKey",
+                    Status: this.editKey.status,
+                    Key: this.editKey.key,
+                    Name: this.editKey.name,
+                }
+            ));
+        },
         getListByStatus: function (status) {
 
             this.activeStatus = status;
@@ -55,8 +69,8 @@ new Vue({
             }
 
             this.ws.send(JSON.stringify({
-                    Status: this.activeStatus,
-                    GetList: true
+                    Type: "getList",
+                    Status: this.activeStatus
                 }
             ));
         },
@@ -73,7 +87,24 @@ new Vue({
                 var msg = JSON.parse(e.data);
                 console.log(msg.Status);
                 console.log(msg.Items);
-                self.items = msg.Items
+                console.log(msg.UpdatedKey);
+
+                if (msg.Type === "getList") {
+                    self.items = msg.Items;
+                } else {
+                    self.popUpOpen = false;
+                    self.editKey.key = "";
+                    self.editKey.name = "";
+                    self.editKey.status = "";
+
+                    self.items.forEach(function(element, index) {
+                        if (element.Key === msg.UpdatedKey) {
+                            Vue.delete(self.items, index);
+                        }
+                    });
+
+                }
+
             });
 
             this.ws.addEventListener('close', function (e) {
