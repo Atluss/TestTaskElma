@@ -3,22 +3,60 @@ new Vue({
     data: {
         ws: null,
         items : [],
+        popUpOpen: false,
+        statuses : {
+            empty: 0,
+            active: 1,
+            blocked: 2,
+            all: 3,
+        },
+        activeStatus: 0,
+        editKey: {
+            key : "",
+            name: "",
+            status: ""
+        },
+        editButName : "Разрешить"
     },
     created: function() {
 
-        this.getListByStatus(0);
+        this.getListByStatus(this.activeStatus);
 
     },
     methods: {
+        openPopUp: function(key, name, status) {
+
+            this.editKey.key = key;
+            this.editKey.name = name;
+            this.editKey.status = status;
+
+            if (this.editKey.status === 1) {
+                this.editButName = "Разрешить";
+            } else {
+                this.editButName = "Заблокировать";
+            }
+
+            console.log(this.editKey.key);
+            console.log(this.editKey.name);
+            console.log(this.editKey.status);
+
+            this.popUpOpen = true;
+        },
+        closePopUp: function() {
+            this.popUpOpen = false;
+        },
         getListByStatus: function (status) {
 
+            this.activeStatus = status;
+
             if (!this.ws || this.ws.readyState === 3) {
-                this.initializeWsConn(status);
+                this.initializeWsConn(this.activeStatus);
                 return
             }
 
             this.ws.send(JSON.stringify({
-                    Status: status
+                    Status: this.activeStatus,
+                    GetList: true
                 }
             ));
         },

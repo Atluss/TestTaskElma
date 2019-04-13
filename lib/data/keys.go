@@ -50,7 +50,13 @@ func (obj *Keys) LoadByKey(db *gorm.DB) error {
 // GetKeysByStatus get keys by status
 func GetKeysByStatus(status int, db *gorm.DB) (keys []Keys, err error) {
 
-	if err := db.Table(TableKeys).Where("status = ?", status).Scan(&keys).Error; err != nil {
+	tx := db.Table(TableKeys)
+
+	if status < 3 {
+		tx = tx.Where("status = ?", status)
+	}
+
+	if err := tx.Scan(&keys).Error; err != nil {
 		log.Printf("error: get keys by status %d, err: %s", status, err)
 		return keys, err
 	}

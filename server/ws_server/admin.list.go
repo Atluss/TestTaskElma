@@ -36,7 +36,8 @@ type wSReplyList struct {
 }
 
 type wSRequestList struct {
-	Status int
+	GetList bool // need get keys list
+	Status  int
 }
 
 func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
@@ -64,12 +65,17 @@ func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		msg := wSReplyList{}
-		if keys, err := data.GetKeysByStatus(req.Status, obj.Setup.Gorm); err != nil {
-			msg.Status = http.StatusInternalServerError
-		} else {
-			msg.Status = http.StatusOK
-			msg.Items = keys
+		msg := wSReplyList{
+			Items: []data.Keys{},
+		}
+
+		if req.GetList {
+			msg.Items, err = data.GetKeysByStatus(req.Status, obj.Setup.Gorm)
+			if err != nil {
+				msg.Status = http.StatusInternalServerError
+			} else {
+				msg.Status = http.StatusOK
+			}
 		}
 
 		err := ws.WriteJSON(msg)
