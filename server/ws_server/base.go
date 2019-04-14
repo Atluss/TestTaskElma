@@ -1,8 +1,21 @@
 package ws_server
 
 import (
+	"github.com/Atluss/TestTaskElma/lib/data"
 	"github.com/gorilla/websocket"
 	"net/http"
+)
+
+type wSMsgNewKey struct {
+	Status int
+	Type   string
+	Key    data.Keys
+}
+
+const (
+	GetList   = "getList"
+	UpdateKey = "updateKey"
+	NewKey    = "newKey"
 )
 
 var Upgrader = websocket.Upgrader{
@@ -12,5 +25,3 @@ var Upgrader = websocket.Upgrader{
 		return true
 	},
 }
-
-var Clients = make(map[*websocket.Conn]bool) // connected clients

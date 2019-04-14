@@ -2,11 +2,15 @@ package cpu_status
 
 import (
 	"fmt"
+	"github.com/Atluss/TestTaskElma/server/ws_server"
+	"github.com/gorilla/websocket"
 	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
 )
+
+var Broadcast = make(chan CPULoad) // broadcast CPU load channel
 
 type CPULoad struct {
 	CPU string
@@ -39,7 +43,13 @@ func getCPUSample() (idle, total uint64) {
 	return
 }
 
-func GetCpuLoad(broadcast chan<- CPULoad) {
+// RunCPUBroadcast run broadcast CPU
+func RunCPUBroadcast() {
+	go getCpuLoad(Broadcast)
+	go handleCPUBroadcast(Broadcast)
+}
+
+func getCpuLoad(broadcast chan<- CPULoad) {
 	for {
 		idle0, total0 := getCPUSample()
 		time.Sleep(3 * time.Second)
@@ -51,5 +61,25 @@ func GetCpuLoad(broadcast chan<- CPULoad) {
 		//log.Printf("%9.2f %%", cpuUsage)
 		cp := CPULoad{CPU: fmt.Sprintf("%9.2f", cpuUsage)}
 		broadcast <- cp
+	}
+}
+
+// handleCPUBroadcast send CPU load all accepted connections
+func handleCPUBroadcast(broadcast <-chan CPULoad) {
+	for {
+		msg := <-broadcast
+		banKeys := ws_server.BanKeys.CloneMe()
+		for client := range ws_server.Clients {
+
+			if _, ok := banKeys[client.Key.Key]; ok {
+				client.WriteClose(websocket.ClosePolicyViolation, "banned")
+				continue
+			}
+
+			err := client.Conn.WriteJSON(msg)
+			if err != nil {
+				client.Stop(err)
+			}
+		}
 	}
 }

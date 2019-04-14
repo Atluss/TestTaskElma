@@ -9,12 +9,19 @@ new Vue({
             active: 1,
             blocked: 2,
             all: 3,
+            online: 100,
+            offline: 200,
         },
         activeStatus: 0,
         editKey: {
             key : "",
             name: "",
             status: ""
+        },
+        messageType: {
+            updateKey: "updateKey",
+            getList: "getList",
+            newKey: "newKey"
         },
         editButName : "Разрешить"
     },
@@ -48,12 +55,13 @@ new Vue({
             }
 
             this.ws.send(JSON.stringify({
-                    Type: "updateKey",
+                    Type: this.messageType.updateKey,
                     Status: this.editKey.status,
                     Key: this.editKey.key,
                     Name: this.editKey.name,
                 }
             ));
+            this.popUpOpen = false;
         },
         getListByStatus: function (status) {
 
@@ -65,7 +73,7 @@ new Vue({
             }
 
             this.ws.send(JSON.stringify({
-                    Type: "getList",
+                    Type: this.messageType.getList,
                     Status: this.activeStatus
                 }
             ));
@@ -81,24 +89,40 @@ new Vue({
 
             this.ws.addEventListener('message', function(e) {
                 var msg = JSON.parse(e.data);
-                // console.log(msg.Status);
-                // console.log(msg.Items);
-                // console.log(msg.UpdatedKey);
 
-                if (msg.Type === "getList") {
+                if (msg.Type === self.messageType.getList) {
                     self.items = msg.Items;
-                } else {
-                    self.popUpOpen = false;
-                    self.editKey.key = "";
-                    self.editKey.name = "";
-                    self.editKey.status = "";
+                }
 
-                    self.items.forEach(function(element, index) {
-                        if (element.Key === msg.UpdatedKey) {
-                            Vue.delete(self.items, index);
+                if (msg.Type === self.messageType.newKey){
+
+                    var finded = -1;
+                    if (self.items !== null && self.items.length > 0) {
+                        self.items.forEach(function(element, index) {
+                            if (element.Key === msg.Key.Key) {
+                                console.log("finded!!");
+                                finded = index;
+                            }
+                        });
+                    }
+
+                    if (msg.Key.Status === self.activeStatus) {
+                        if (finded < 0) {
+                            if (self.items === null) {
+                                self.items = [];
+                                self.items.push(msg.Key);
+                            } else {
+                                self.items.push(msg.Key);
+                            }
+                        } else if (self.activeStatus === self.statuses.online){
+                            Vue.delete(self.items, finded);
                         }
-                    });
-
+                    } else {
+                        if (finded > -1 && msg.Key.Status !== self.statuses.online) {
+                            console.log("delll");
+                            Vue.delete(self.items, finded);
+                        }
+                    }
                 }
 
             });

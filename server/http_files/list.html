@@ -23,10 +23,14 @@
             <div class="button_sr but_blocked_k f_l"
                  :class="{but_active: activeStatus == statuses.blocked}"
                  @click="getListByStatus(statuses.blocked)">Заблокированные</div>
-
             <div class="button_sr but_all f_l"
                  :class="{but_active: activeStatus == statuses.all}"
                  @click="getListByStatus(statuses.all)">Все</div>
+
+            <div class="button_sr but_online f_l"
+                 :class="{but_active: activeStatus == statuses.online}"
+                 @click="getListByStatus(statuses.online)">Online</div>
+
             <div class="clear"></div>
         </div>
 
@@ -38,12 +42,12 @@
 
                 <div class="w_300">
                     <div class="sm_button sb_accept f_l mr_10" @click="openPopUp(item.Key, item.Name, statuses.active)" v-if="item.Status == 0 || item.Status == 2">Разрешить</div>
-                    <div class="sm_button sb_block f_l" @click="openPopUp(item.Key, item.Name, statuses.blocked)" v-if="item.Status == 0 || item.Status == 1">Заблокировать</div>
+                    <div class="sm_button sb_block f_l" @click="openPopUp(item.Key, item.Name, statuses.blocked)" v-if="item.Status == 0 || item.Status == 1 || item.Status == 100">Заблокировать</div>
                     <div class="clear"></div>
                 </div>
 
                 <div class="label_holder" v-if="item.Status != 0">
-                    <div class="key_lb lb_accept" v-if="item.Status == 1">разрешен</div>
+                    <div class="key_lb lb_accept" v-if="item.Status == 1 || item.Status == 100">разрешен</div>
                     <div class="key_lb lb_blocked" v-if="item.Status == 2">заблокирован</div>
                 </div>
             </div>

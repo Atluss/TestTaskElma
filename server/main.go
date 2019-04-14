@@ -4,24 +4,12 @@ import (
 	"fmt"
 	"github.com/Atluss/TestTaskElma/lib"
 	"github.com/Atluss/TestTaskElma/lib/config"
-	cpu "github.com/Atluss/TestTaskElma/lib/cpu.status"
+	cpu "github.com/Atluss/TestTaskElma/lib/cpu_status"
 	"github.com/Atluss/TestTaskElma/server/rest_api/v1"
 	webserve "github.com/Atluss/TestTaskElma/server/web_server"
-	ws_server "github.com/Atluss/TestTaskElma/server/ws_server"
-	"github.com/gorilla/websocket"
-	"log"
+	"github.com/Atluss/TestTaskElma/server/ws_server"
 	"net/http"
 )
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
-var Broadcast = make(chan cpu.CPULoad) // broadcast channel
 
 func main() {
 
@@ -40,28 +28,12 @@ func main() {
 	lib.FailOnError(v1.V1Login(set, false), "error")
 	lib.FailOnError(v1.V1Logout(set), "error")
 
-	go cpu.GetCpuLoad(Broadcast)
-	go HandleMessages()
+	// broadcast cpu load two gorutines in there
+	cpu.RunCPUBroadcast()
 
+	//ws connection setup
 	lib.FailOnError(ws_server.WSClient(set), "error")
 	lib.FailOnError(ws_server.WSList(set, true), "error")
 
 	lib.FailOnError(http.ListenAndServe(fmt.Sprintf(":%s", set.Config.Port), set.Route), "error")
-}
-
-// HandleMessages send CPU load all accepted connections
-func HandleMessages() {
-	for {
-
-		msg := <-Broadcast
-
-		for client := range ws_server.Clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
-				client.Close()
-				delete(ws_server.Clients, client)
-			}
-		}
-	}
 }

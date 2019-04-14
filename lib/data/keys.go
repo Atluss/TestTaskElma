@@ -7,7 +7,14 @@ import (
 	"log"
 )
 
-const TableKeys = "keys"
+const (
+	TableKeys  = "keys"
+	KeyEmpty   = 0
+	KeyActive  = 1
+	KeyBlocked = 2
+	KeyOnline  = 100
+	KeyOfline  = 200
+)
 
 type Keys struct {
 	Id     int `gorm:"primary_key"`
@@ -31,9 +38,9 @@ func (obj *Keys) Create(db *gorm.DB) error {
 	if err := db.Table(TableKeys).
 		Create(obj).Error; err != nil {
 		return err
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func (obj *Keys) LoadByKey(db *gorm.DB) error {

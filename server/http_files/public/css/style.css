@@ -66,6 +66,7 @@ body.bodyLock {
 .but_accept_k, .but_accept_k.but_active::before, .but_accept_k:hover::before {background: green}
 .but_blocked_k, .but_blocked_k.but_active::before, .but_blocked_k:hover::before {background: red}
 .but_all, .but_all.but_active::before, .but_all:hover::before {background: #006666}
+.but_online, .but_online.but_active::before, .but_online:hover::before {background: #00CC99}
 
 .key_list .key_el:nth-child(2n+1) {background: #f8f8f8}
 .key_el {

@@ -40,12 +40,12 @@ type wSReplyList struct {
 }
 
 type wSRequestList struct {
-	Type string // message type
+	Status int
+	Type   string // message type
 	// getList
 	// updateKey
-	Status int
-	Key    string
-	Name   string
+	Key  string
+	Name string
 }
 
 func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
@@ -63,56 +63,9 @@ func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 
-	for {
-
-		req := wSRequestList{}
-		err = ws.ReadJSON(&req)
-		if err != nil {
-			log.Printf("error: %v", err)
-			ws.CloseHandler()
-			break
-		}
-
-		log.Printf("%+v", req)
-
-		msg := wSReplyList{
-			Status: http.StatusOK,
-			Items:  []data.Keys{},
-		}
-
-		if req.Type == "getList" {
-			msg.Type = "getList"
-			msg.Items, err = data.GetKeysByStatus(req.Status, obj.Setup.Gorm)
-			if err != nil {
-				msg.Status = http.StatusInternalServerError
-			}
-		} else {
-
-			msg.Type = "updateKey"
-
-			key := data.Keys{
-				Key:    req.Key,
-				Name:   req.Name,
-				Status: req.Status,
-			}
-
-			if err := key.Update(obj.Setup.Gorm); err != nil {
-				msg.Status = http.StatusInternalServerError
-			} else {
-				msg.UpdatedKey = key.Key
-			}
-
-			log.Printf("%+v", key)
-			log.Printf("%+v", msg)
-
-		}
-
-		err := ws.WriteJSON(msg)
-		if err != nil {
-			log.Printf("error: %v", err)
-			ws.CloseHandler()
-			break
-		}
+	admin := Admin{
+		Conn: ws,
+		send: make(chan interface{}),
 	}
-
+	admin.Run(obj.Setup.Gorm)
 }
