@@ -18,15 +18,13 @@ type requestV1Login struct {
 	Pass  string `json:"Pass"`
 }
 
+// V1Login new login logic for API
 func V1Login(set *config.Setup, secure bool) error {
-
 	login := &v1Login{
 		Url:    fmt.Sprintf("/%s/login", api.V1Api),
 		Secure: secure,
 	}
-
 	set.Route.HandleFunc(login.Url, login.Request)
-
 	return nil
 }
 
@@ -37,14 +35,12 @@ type v1Login struct {
 }
 
 func (obj *v1Login) Request(w http.ResponseWriter, r *http.Request) {
-
 	api.SetDefaultHeadersV1API(w)
 	rep := api.ReplayStatus{
 		Status: http.StatusOK,
 	}
 
 	session := auth.GetSession(r)
-
 	if obj.Secure && !auth.CheckAuth(session) {
 		rep.Status = http.StatusForbidden
 		rep.Description = http.StatusText(http.StatusForbidden)

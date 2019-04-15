@@ -39,10 +39,10 @@ type gormConfig struct {
 
 // config main
 type config struct {
-	Name     string     `json:"Name"`    // API name
-	Version  string     `json:"Version"` // API version
-	Host     string     `json:"Host"`
-	Port     string     `json:"Port"`
+	Name     string     `json:"Name"`     // API name
+	Version  string     `json:"Version"`  // API version
+	Host     string     `json:"Host"`     // API host
+	Port     string     `json:"Port"`     // API port
 	FilePath string     `json:"FilePath"` // path to Json settings file
 	Gorm     gormConfig `json:"Gorm"`
 }

@@ -40,6 +40,7 @@ func GetActiveClients() (keys []data.Keys) {
 	return keys
 }
 
+// Run process messages from client
 func (obj *Client) Run() {
 	obj.SendAdminsAboutMe(data.KeyOnline)
 	for {
@@ -54,6 +55,7 @@ func (obj *Client) Run() {
 	}
 }
 
+// Run client connection and sends admin client off
 func (obj *Client) Stop(err error) {
 	log.Printf("error: %+v", err)
 	obj.Conn.Close()
@@ -78,7 +80,7 @@ func (obj *Client) SendAdminsAboutMe(status int) {
 	AddAllAdminMessage(stN)
 }
 
-// Validate client send key and key have status 1 (active)
+// Validate client connection and try accept it for broadcast
 func (obj *Client) Validate(db *gorm.DB) bool {
 
 	err := obj.Conn.ReadJSON(&obj.Key)

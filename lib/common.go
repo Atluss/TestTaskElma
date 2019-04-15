@@ -18,7 +18,6 @@ func LogOnError(err error, msg string) bool {
 		log.Printf("%s: %s", msg, err)
 		return false
 	}
-
 	return true
 }
 

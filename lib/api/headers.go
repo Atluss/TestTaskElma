@@ -1,3 +1,4 @@
+// Headers func and struct
 package api
 
 import (
@@ -15,12 +16,6 @@ type HeadRequest interface {
 }
 
 type RequestRest struct {
-	HeadRequest
-	w *http.ResponseWriter
-	r *http.Request
-}
-
-type RequestHttp struct {
 	HeadRequest
 	w *http.ResponseWriter
 	r *http.Request

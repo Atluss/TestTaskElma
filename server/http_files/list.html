@@ -39,8 +39,10 @@
                 <div class="key_val mb_10">User agent: <span>{{item.Name}}</span></div>
 
                 <div class="w_300">
-                    <div class="sm_button sb_accept f_l mr_10" @click="openPopUp(item.Key, item.Name, statuses.active)" v-if="item.Status == 0 || item.Status == 2">Разрешить</div>
-                    <div class="sm_button sb_block f_l" @click="openPopUp(item.Key, item.Name, statuses.blocked)" v-if="item.Status == 0 || item.Status == 1 || item.Status == 100">Заблокировать</div>
+                    <div class="sm_button sb_accept f_l mr_10" @click="openPopUp(item.Key, item.Name, statuses.active)"
+                         v-if="item.Status == 0 || item.Status == 2">Разрешить</div>
+                    <div class="sm_button sb_block f_l" @click="openPopUp(item.Key, item.Name, statuses.blocked)"
+                         v-if="item.Status == 0 || item.Status == 1 || item.Status == 100">Заблокировать</div>
                     <div class="clear"></div>
                 </div>
 
@@ -58,8 +60,7 @@
             <div class="input_holder">
                 <label for="el_name">Введите имя ключа:</label>
                 <input type="text" name="el_name" id="el_name" v-model.trim="editKey.name"/>
-                <div class="btn_set_status_key mt_10 mb_10"
-                     v-html="editButName"
+                <div class="btn_set_status_key mt_10 mb_10" v-html="editButName"
                      :class="{block_btn: editKey.status == statuses.blocked}" @click="sendUpdateKey">Разрешить</div>
             </div>
         </div>

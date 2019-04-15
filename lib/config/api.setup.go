@@ -1,3 +1,4 @@
+// This package for create DB conn and Route from config file.
 package config
 
 import (
@@ -45,6 +46,7 @@ type Setup struct {
 	Gorm   *gorm.DB
 }
 
+// getDB setup gorm connection for DB
 func (obj *Setup) getDB() error {
 
 	connectQuery := fmt.Sprintf(obj.Config.Gorm.ConnPattern, obj.Config.Gorm.Type, obj.Config.Gorm.User,

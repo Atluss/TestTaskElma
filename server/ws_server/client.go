@@ -1,3 +1,4 @@
+// clients websocket connection
 package ws_server
 
 import (
@@ -8,15 +9,13 @@ import (
 	"net/http"
 )
 
+// WSClient add websocket connection for clients
 func WSClient(set *config.Setup) error {
-
 	wsClient := &wSClient{
 		Url:   "/st_cpu",
 		Setup: set,
 	}
-
 	set.Route.HandleFunc(wsClient.Url, wsClient.HandleConnection)
-
 	return nil
 }
 

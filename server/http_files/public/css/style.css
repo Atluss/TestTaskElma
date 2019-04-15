@@ -118,7 +118,6 @@ body.bodyLock {
 .sb_accept {background: #009900}
 .sb_block {background: #990000}
 
-/*login*/
 .login_form {
     width: 200px;
     height: 220px;
@@ -194,8 +193,6 @@ body.bodyLock {
     font-size: 12px;
     font-weight: 600;
 }
-
-/*client*/
 
 .send_key_div {
     margin: 20px auto 0;

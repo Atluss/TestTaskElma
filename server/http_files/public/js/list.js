@@ -100,7 +100,6 @@ new Vue({
                     if (self.items !== null && self.items.length > 0) {
                         self.items.forEach(function(element, index) {
                             if (element.Key === msg.Key.Key) {
-                                console.log("finded!!");
                                 finded = index;
                             }
                         });
@@ -119,7 +118,6 @@ new Vue({
                         }
                     } else {
                         if (finded > -1 && msg.Key.Status !== self.statuses.online) {
-                            console.log("delll");
                             Vue.delete(self.items, finded);
                         }
                     }

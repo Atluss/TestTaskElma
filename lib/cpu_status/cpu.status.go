@@ -1,3 +1,4 @@
+// cpu_status work with Linux CPU and broadcast func for clients
 package cpu_status
 
 import (

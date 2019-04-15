@@ -1,3 +1,9 @@
+// This is execute file for server
+// Run:
+// 1. Web server
+// 2. RestAPI
+// 3. Websocket connection
+// 4. Two go rutines for CPU broadcasts
 package main
 
 import (

@@ -10,8 +10,8 @@ import (
 	"net/http"
 )
 
+// V1Logout logout logic
 func V1Logout(set *config.Setup) error {
-
 	login := &v1Logout{
 		Url: fmt.Sprintf("/%s/logout", api.V1Api),
 	}
@@ -26,7 +26,6 @@ type v1Logout struct {
 }
 
 func (obj *v1Logout) Request(w http.ResponseWriter, r *http.Request) {
-
 	api.SetDefaultHeadersV1API(w)
 	auth.SaveSessionLogout(auth.GetSession(r), w, r)
 	rep := api.ReplayStatus{
