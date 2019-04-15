@@ -14,7 +14,12 @@ import (
 	"github.com/Atluss/TestTaskElma/server/rest_api/v1"
 	webserver "github.com/Atluss/TestTaskElma/server/web_server"
 	"github.com/Atluss/TestTaskElma/server/ws_server"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -22,6 +27,18 @@ func main() {
 	path := "settings.json"
 	set := config.NewApiSetup(path)
 	set.Config.Print()
+
+	// stop server
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Println("Try stop server...")
+		lib.LogOnError(set.Gorm.Close(), "error stop gorm")
+		time.Sleep(time.Second)
+		log.Println("Server stop! Buy buy!")
+		os.Exit(1)
+	}()
 
 	// files for web pages: images, css, fonts, js and etc.
 	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http_files/public"))))
