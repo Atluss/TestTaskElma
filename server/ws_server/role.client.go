@@ -12,11 +12,13 @@ import (
 	"time"
 )
 
+// BannedKeys list banned keys when server run, this list generate when admin ban key
 type BannedKeys struct {
 	mt sync.RWMutex
 	V  map[string]bool
 }
 
+// CloneMe return list banned keys safely
 func (obj *BannedKeys) CloneMe() map[string]bool {
 	obj.mt.RLock()
 	nm := obj.V
@@ -24,15 +26,18 @@ func (obj *BannedKeys) CloneMe() map[string]bool {
 	return nm
 }
 
+// BanKeys initialize list of banned keys
 var BanKeys = BannedKeys{mt: sync.RWMutex{}, V: map[string]bool{}}
 var Clients = make(map[*Client]bool) // connected clients
 
+// Client typical client online :)
 type Client struct {
 	Conn *websocket.Conn
 	Key  data.Keys
 	run  chan string
 }
 
+// GetActiveClients return online keys right now
 func GetActiveClients() (keys []data.Keys) {
 	for client := range Clients {
 		keys = append(keys, client.Key)

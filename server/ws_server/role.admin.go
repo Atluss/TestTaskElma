@@ -34,7 +34,7 @@ func (obj *Admin) Run(db *gorm.DB) {
 	log.Println(wait)
 }
 
-// Stop
+// Stop connection and remove admin from admins list
 func (obj *Admin) Stop(err error) {
 	if obj.Conn != nil {
 		obj.Conn.Close()
@@ -72,11 +72,10 @@ func (obj *Admin) Read(db *gorm.DB) {
 		}
 
 		switch req.Type {
-
 		case GetList:
 			{
 				msg.Type = GetList
-				if req.Status > 10 {
+				if req.Status > 10 { // for online clients
 					msg.Items = GetActiveClients()
 				} else {
 					msg.Items, err = data.GetKeysByStatus(req.Status, db)
@@ -86,11 +85,9 @@ func (obj *Admin) Read(db *gorm.DB) {
 				}
 				obj.send <- msg
 			}
-
 		case UpdateKey:
 			{
 				msg.Type = UpdateKey
-
 				key := data.Keys{
 					Key:    req.Key,
 					Name:   req.Name,
@@ -101,7 +98,6 @@ func (obj *Admin) Read(db *gorm.DB) {
 					msg.Status = http.StatusInternalServerError
 				} else {
 					msg.UpdatedKey = key.Key
-
 					if key.Status == data.KeyBlocked {
 						BanKeys.V[key.Key] = true
 					} else {
@@ -114,6 +110,7 @@ func (obj *Admin) Read(db *gorm.DB) {
 					Type:   NewKey,
 					Key:    key,
 				}
+				// sends all admins about key updated
 				AddAllAdminMessage(stN)
 			}
 		}

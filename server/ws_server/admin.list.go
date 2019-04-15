@@ -10,16 +10,14 @@ import (
 	"net/http"
 )
 
+// WSList setup websocket connection for admin list client
 func WSList(set *config.Setup, secure bool) error {
-
 	wsClient := &wSList{
 		Url:    "/ws_list",
 		Setup:  set,
-		Secure: secure,
+		Secure: secure, // only for admins!
 	}
-
 	set.Route.HandleFunc(wsClient.Url, wsClient.HandleConnection)
-
 	return nil
 }
 
@@ -35,6 +33,7 @@ type wSReplyList struct {
 	Type   string // message type
 	// getList
 	// updateKey
+	// newKey
 	Items      []data.Keys
 	UpdatedKey string
 }
@@ -50,7 +49,7 @@ type wSRequestList struct {
 
 func (obj *wSList) HandleConnection(w http.ResponseWriter, r *http.Request) {
 
-	if obj.Secure {
+	if obj.Secure { // check it's admin
 		if !auth.CheckAuth(auth.GetSession(r)) {
 			log.Printf("warning: request of rights from ip %s ", r.RemoteAddr)
 			return
