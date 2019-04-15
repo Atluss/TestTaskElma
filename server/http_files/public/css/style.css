@@ -278,3 +278,28 @@ fieldset {
 .btn_set_status_key.block_btn {
     background: #990000;
 }
+
+.connection_status {
+    position: fixed;
+    width: 200px;
+    top: 15px;
+    right: 10px;
+    background: #FFFFCC;
+    border-radius: 5px;
+    border: 1px solid #006633;
+    padding: 10px;
+    font-size: 12px;
+    opacity: 0.4;
+}
+
+.connection_status:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.logout_bt {
+    line-height: 5;
+    color: #0066FF;
+    cursor: pointer;
+    text-decoration: underline;
+}

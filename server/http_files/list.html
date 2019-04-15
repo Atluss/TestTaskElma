@@ -12,7 +12,10 @@
 <body>
 <main id="app">
     <div class="main_div">
-        <h1>Список ключей</h1>
+        <div class="f_l w_300"><h1>Список ключей</h1></div>
+        <div class="f_l w_100 logout_bt" @click="logout()">Выйти</div>
+        <div class="clear"></div>
+
         <div class="button_sort_holder">
             <div class="button_sr but_empty_k f_l"
                  :class="{but_active: activeStatus == statuses.empty}"
@@ -65,6 +68,7 @@
             </div>
         </div>
     </div>
+    <div class="connection_status" v-html="connectionStatusText"></div>
 </main>
 <script type="application/javascript" src="public/js/vue.js"></script>
 <script type="application/javascript" src="public/js/list.js"></script>

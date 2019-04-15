@@ -23,7 +23,8 @@ new Vue({
             getList: "getList",
             newKey: "newKey"
         },
-        editButName : "Разрешить"
+        editButName : "Разрешить",
+        connectionStatusText: ""
     },
     created: function() {
 
@@ -31,6 +32,24 @@ new Vue({
 
     },
     methods: {
+        logout: function() {
+            fetch('/v1/logout')
+                .then((response) => {
+                    if(response.ok) {
+                        return response.json();
+                    }
+
+                    throw new Error('Network response was not ok');
+                })
+                .then((json) => {
+                    if (json.Status === 200) {
+                        window.location.href = "/";
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         openPopUp: function(key, name, status) {
 
             this.editKey.key = key;
@@ -84,7 +103,8 @@ new Vue({
             this.ws = new WebSocket('ws://' + window.location.host + '/ws_list');
 
             this.ws.addEventListener('open', function (e) {
-                self.getListByStatus(status)
+                self.getListByStatus(status);
+                self.connectionStatusText = "Connected to WebSocket";
             });
 
             this.ws.addEventListener('message', function(e) {
@@ -123,13 +143,15 @@ new Vue({
                     }
                 }
 
+                self.connectionStatusText = "Message from server type: " + msg.Type
+
             });
 
             this.ws.addEventListener('close', function (e) {
-                console.log("close conn: " + e.code + " -- " + e.reason )
+                self.connectionStatusText = "Connected close: " + e.code;
             });
             this.ws.addEventListener('error', function (e) {
-                console.log("error ws connection")
+                self.connectionStatusText = "error " + e + " ws connection";
             });
         }
     }
