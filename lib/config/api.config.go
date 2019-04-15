@@ -41,7 +41,7 @@ type gormConfig struct {
 type config struct {
 	Name     string     `json:"Name"`    // API name
 	Version  string     `json:"Version"` // API version
-	Address  string     `json:"Address"`
+	Host     string     `json:"Host"`
 	Port     string     `json:"Port"`
 	FilePath string     `json:"FilePath"` // path to Json settings file
 	Gorm     gormConfig `json:"Gorm"`
@@ -82,7 +82,7 @@ func (obj *config) validate() error {
 		return fmt.Errorf("config miss version")
 	}
 
-	if obj.Address == "" {
+	if obj.Host == "" {
 		return fmt.Errorf("config miss address")
 	}
 
@@ -124,6 +124,6 @@ func (obj *config) validate() error {
 func (obj *config) Print() {
 	log.Printf("Name: %s", obj.Name)
 	log.Printf("Version: %s", obj.Version)
-	log.Printf("Address: %s", obj.Address)
+	log.Printf("Host: %s", obj.Host)
 	log.Printf("Port: %s", obj.Port)
 }
