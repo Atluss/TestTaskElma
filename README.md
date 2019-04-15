@@ -41,7 +41,7 @@
 Перед запуском сервера необходимо запустить докер.
 
 #### Запуск докера
-Как установить и запустить Docker, возможно при первом запуске придётся создать базу данных main и таблицу `keys` см. ниже SQL запрос на создание таблицы:
+Как установить и запустить Docker, возможно при первом запуске придётся создать базу данных `main` и таблицу `keys` см. ниже SQL запрос на создание таблицы:
  1. [Установка Docker-CE (ubuntu)](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
  2. [Установка Docker compose](https://docs.docker.com/compose/install/)
  3. В папке `docker` запустить: `sudo docker-compose up`
@@ -74,7 +74,7 @@
 
 Для работы сервиса необходима 1 таблица `keys` SQL запрос для создания таблицы:
 
-```PostgreSql
+```postgresql
 -- auto-generated definition
 create table keys
 (
