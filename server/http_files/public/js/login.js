@@ -59,3 +59,25 @@ $(document).ready(function () {
         }
     });
 });
+
+function checkTextInputBuyEmpty(input) {
+    var val = input.val();
+    return val === "" || typeof val === 'undefined';
+}
+
+function formShowError (error, element) {
+    var errorStrs = {
+        "noData" : "заполните все поля",
+        "loginError" : "пара логин и пароль не совпадает",
+        "noServerAdd" : "введите адрес сервера",
+        "badRequest" : "что то пошло не так при отправки ключа",
+        "serverNo" : "сервер не отвечает",
+        getError: function (key) {
+            return typeof errorStrs[key] === 'undefined' ? "Ошибки нет в списке ошибок:-)" : errorStrs[key];
+        }
+    };
+
+    var div = "<div>"+errorStrs.getError(error)+"</div>";
+
+    element.append(div).show();
+}

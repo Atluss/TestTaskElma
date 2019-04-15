@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// keys status
 const (
 	TableKeys  = "keys"
 	KeyEmpty   = 0
@@ -66,7 +67,7 @@ func (obj *Keys) Update(db *gorm.DB) error {
 	return nil
 }
 
-// GetKeysByStatus get keys by status
+// GetKeysByStatus get keys by status if status more than 10 returns all keys
 func GetKeysByStatus(status int, db *gorm.DB) (keys []Keys, err error) {
 
 	tx := db.Table(TableKeys)

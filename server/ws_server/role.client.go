@@ -63,6 +63,7 @@ func (obj *Client) Stop(err error) {
 	obj.run <- "Stop"
 }
 
+// SendAdminsAboutMe sends all admins messages
 func (obj *Client) SendAdminsAboutMe(status int) {
 	stN := wSMsgNewKey{
 		Status: http.StatusOK,
@@ -77,6 +78,7 @@ func (obj *Client) SendAdminsAboutMe(status int) {
 	AddAllAdminMessage(stN)
 }
 
+// Validate client send key and key have status 1 (active)
 func (obj *Client) Validate(db *gorm.DB) bool {
 
 	err := obj.Conn.ReadJSON(&obj.Key)
@@ -93,7 +95,7 @@ func (obj *Client) Validate(db *gorm.DB) bool {
 	if err := obj.Key.LoadByKey(db); err != nil {
 		if err := obj.Key.Create(db); err != nil {
 			log.Println(err)
-			// send 500 if we can't create
+			// send 500 if server can't create
 			obj.WriteClose(websocket.CloseInternalServerErr, http.StatusText(http.StatusInternalServerError))
 			return false
 		} else {
@@ -118,6 +120,7 @@ func (obj *Client) Validate(db *gorm.DB) bool {
 	return true
 }
 
+// WriteClose send status close and message
 func (obj *Client) WriteClose(clNum int, mgs string) {
 	if err := obj.Conn.WriteControl(websocket.CloseMessage,
 		websocket.FormatCloseMessage(clNum, mgs),

@@ -49,6 +49,7 @@ func RunCPUBroadcast() {
 	go handleCPUBroadcast(Broadcast)
 }
 
+// getCpuLoad measure CPU load after 3 seconds
 func getCpuLoad(broadcast chan<- CPULoad) {
 	for {
 		idle0, total0 := getCPUSample()

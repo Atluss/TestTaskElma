@@ -12,6 +12,7 @@ type wSMsgNewKey struct {
 	Key    data.Keys
 }
 
+// types messages
 const (
 	GetList   = "getList"
 	UpdateKey = "updateKey"
@@ -21,7 +22,7 @@ const (
 var Upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
+	CheckOrigin: func(r *http.Request) bool { // accept all origins
 		return true
 	},
 }

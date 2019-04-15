@@ -6,7 +6,7 @@ import (
 	"github.com/Atluss/TestTaskElma/lib/config"
 	cpu "github.com/Atluss/TestTaskElma/lib/cpu_status"
 	"github.com/Atluss/TestTaskElma/server/rest_api/v1"
-	webserve "github.com/Atluss/TestTaskElma/server/web_server"
+	webserver "github.com/Atluss/TestTaskElma/server/web_server"
 	"github.com/Atluss/TestTaskElma/server/ws_server"
 	"net/http"
 )
@@ -21,8 +21,8 @@ func main() {
 	set.Route.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./http_files/public"))))
 
 	// web pages
-	webserve.AddPage("http_files/list.html", "/", true, set)
-	webserve.AddPage("http_files/client.html", "/client", false, set)
+	webserver.AddPage("http_files/list.html", "/", true, set)
+	webserver.AddPage("http_files/client.html", "/client", false, set)
 
 	// setup rest endpoints
 	lib.FailOnError(v1.V1Login(set, false), "error")
