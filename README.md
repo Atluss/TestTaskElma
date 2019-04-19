@@ -1,6 +1,4 @@
 [![GoDoc](https://godoc.org/github.com/Atluss/TestTaskElma?status.svg)](https://godoc.org/github.com/Atluss/TestTaskElma)
-# Тестовое задание 
-
 ## Серверная часть 
 
 [Пакетная документация на godoc](https://godoc.org/github.com/Atluss/TestTaskElma)
