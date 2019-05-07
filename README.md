@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/Atluss/TestTaskElma)](https://goreportcard.com/report/github.com/Atluss/TestTaskElma)
 [![GoDoc](https://godoc.org/github.com/Atluss/TestTaskElma?status.svg)](https://godoc.org/github.com/Atluss/TestTaskElma)
 ## Серверная часть 
 
