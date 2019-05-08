@@ -1,4 +1,6 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/Atluss/TestTaskElma)](https://goreportcard.com/report/github.com/Atluss/TestTaskElma)
 [![GoDoc](https://godoc.org/github.com/Atluss/TestTaskElma?status.svg)](https://godoc.org/github.com/Atluss/TestTaskElma)
+
 ## Серверная часть 
 
 [Пакетная документация на godoc](https://godoc.org/github.com/Atluss/TestTaskElma)
@@ -29,11 +31,12 @@
 Как установить и запустить Docker, возможно при первом запуске придётся создать базу данных `main` и таблицу `keys` см. ниже SQL запрос на создание таблицы:
  1. [Установка Docker-CE (ubuntu)](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
  2. [Установка Docker compose](https://docs.docker.com/compose/install/)
- 3. В папке `docker` запустить: `sudo docker-compose up`
+ 3. В корне запустить: `sudo docker-compose up`
 
-После запуска докера запускаем сервер, до процесса компиляции он находится в папке: `/server` файл `main.go` (в терминале: `go run main.go`)
+После запуска докера автоматически запуститься сервер, он находится в папке: `cmd/server` файл `main.go` (в терминале: `go run main.go`). 
+Параметры запусков сервисов хранятся в файле: `./docker-compose.yml`. Для отладки можно закоментировать секцию `app`.
 
-Для конфигурирования сервера, используется файл settins.json (json формат [RFC7159](https://tools.ietf.org/html/rfc7159)), 
+Для конфигурирования сервера, используется файл `settins.json` (json формат [RFC7159](https://tools.ietf.org/html/rfc7159)), 
 данный файл должен находится в той же директории где находится исполняемый файл сервера.
 
 Формат файла настроек settins.json, все поля в данном файле обязательны, из название поля должно быть понятно за что оно отвечает, секция gorm отвечает за подключение к БД:
@@ -46,14 +49,14 @@
   "port" : "8080",
   "gorm" : {
     "type" : "postgres",
-    "host" : "localhost",
-    "port" : "45432",
+    "host" : "postgres",
+    "port" : "5432",
     "user" : "postgres",
     "password" : "postgres",
     "database" : "main",
     "connPattern" : "%s://%s:%s@%s:%s?database=%s&sslmode=disable"
   }
-} 
+}
 ```
 
 ### Таблицы в БД 
