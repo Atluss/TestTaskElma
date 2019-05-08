@@ -62,7 +62,7 @@ func (obj *Client) Run() {
 	}
 }
 
-// Run client connection and sends admin client off
+// Stop client connection and sends admin client off
 func (obj *Client) Stop(err error) {
 	log.Printf("error: %+v", err)
 	obj.Conn.Close()
@@ -107,9 +107,8 @@ func (obj *Client) Validate(db *gorm.DB) bool {
 			// send 500 if server can't create
 			obj.WriteClose(websocket.CloseInternalServerErr, http.StatusText(http.StatusInternalServerError))
 			return false
-		} else {
-			obj.SendAdminsAboutMe(obj.Key.Status)
 		}
+		obj.SendAdminsAboutMe(obj.Key.Status)
 	}
 
 	if obj.Key.Status == dataKeys.KeyBlocked {
