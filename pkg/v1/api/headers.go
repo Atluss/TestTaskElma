@@ -1,4 +1,4 @@
-// Headers func and struct
+// Package api Headers func and struct
 package api
 
 import (
@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	// V1Api version
 	V1Api = "v1"
 )
 

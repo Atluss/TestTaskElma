@@ -12,7 +12,7 @@ import (
 
 var admins = make(map[*admin]bool) // admins connects
 
-// handleNewKeyBroadcast send CPU load all accepted connections
+// AddAllAdminMessage send CPU load all accepted connections
 func AddAllAdminMessage(msg interface{}) {
 	for admin := range admins {
 		admin.send <- msg

@@ -11,8 +11,10 @@ import (
 	"time"
 )
 
-var Broadcast = make(chan CPULoad) // broadcast CPU load channel
+// Broadcast CPU load channel
+var Broadcast = make(chan CPULoad)
 
+// CPULoad structure to send
 type CPULoad struct {
 	CPU string
 }

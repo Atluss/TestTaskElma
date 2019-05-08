@@ -5,7 +5,7 @@ services:
     container_name: cn_postgres_et
     image: postgres:bm
     build:
-      context: ./docker/config/postgres
+      context: ./internal/docker/config/postgres
       dockerfile: Dockerfile
       args:
         - container_timezone=${CONTAINER_TIMEZONE}
@@ -18,7 +18,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - ./docker/db/pgdata:/var/lib/postgresql/data
+      - ./internal/docker/db/pgdata:/var/lib/postgresql/data
 
   app:
     container_name: cn_go_main_app_et

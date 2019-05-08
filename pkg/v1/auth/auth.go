@@ -8,9 +8,11 @@ import (
 )
 
 var (
-	// key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
-	Key         = []byte("super-secret-key")
-	Store       = sessions.NewCookieStore(Key)
+	// Key must be 16, 24 or 32 bytes long (AES-128, AES-192 or AES-256)
+	Key = []byte("super-secret-key")
+	// Store cookies store
+	Store = sessions.NewCookieStore(Key)
+	// SessionName cookies name
 	SessionName = "session_a"
 )
 

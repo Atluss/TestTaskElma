@@ -19,6 +19,7 @@ const (
 	NewKey    = "newKey"
 )
 
+// Upgrader ws config buffer
 var Upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,

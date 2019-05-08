@@ -65,8 +65,8 @@ func (obj *v1Login) Request(w http.ResponseWriter, r *http.Request) {
 		rep.Description = http.StatusText(http.StatusForbidden)
 		v1.LogOnError(rep.Encode(w), "warning")
 		return
-	} else {
-		auth.SaveSessionLogin(session, w, r)
-		v1.LogOnError(rep.Encode(w), "warning")
 	}
+
+	auth.SaveSessionLogin(session, w, r)
+	v1.LogOnError(rep.Encode(w), "warning")
 }

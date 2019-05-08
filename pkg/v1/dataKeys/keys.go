@@ -44,11 +44,7 @@ func (obj *Keys) Create(db *gorm.DB) error {
 	if err := obj.checkKeyIsSet(); err != nil {
 		return err
 	}
-	if err := db.Table(TableKeys).
-		Create(obj).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.Table(TableKeys).Create(obj).Error
 }
 
 // LoadByKey load key from DB
