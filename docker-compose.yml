@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  postgres:
+    container_name: cn_postgres_et
+    image: postgres:bm
+    build:
+      context: ./docker/config/postgres
+      dockerfile: Dockerfile
+      args:
+        - container_timezone=${CONTAINER_TIMEZONE}
+    ports:
+      - "45432:5432"
+    expose:
+      - "45432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./docker/db/pgdata:/var/lib/postgresql/data
+
+  app:
+    container_name: cn_go_main_app_et
+    image: golang:1.12.2
+    volumes:
+      - .:/go/src/testTaskForElma
+    working_dir: /go/src/testTaskForElma/cmd/server
+    command: go run main.go
+    environment:
+      - GO111MODULE=on
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    links:
+      - postgres
